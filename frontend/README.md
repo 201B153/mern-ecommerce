@@ -1,4 +1,4 @@
-# Getting Started With  Frontend we have followed the following steps:
+# Getting Started With Frontend We have To follow steps:
 
 -> in terminal:
    74  npx create-react-app frontend
