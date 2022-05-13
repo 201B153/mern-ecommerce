@@ -7,3 +7,4 @@
    76  npm start
    84  npm i react-router-dom
    79  npm i axios
+   79  npm i use-reducer-logger --force
