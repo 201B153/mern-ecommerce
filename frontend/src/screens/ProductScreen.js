@@ -52,7 +52,7 @@ function ProductScreen() {
     fetchData();
   }, [slug]);
 
-  const { state, dispatch: cxtDispatch } = useContext(Store);
+  const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart } = state;
   const addToCartHandler = async () => {
     const existItem = cart.cartItems.find((x) => x._id === product._id);
@@ -63,9 +63,9 @@ function ProductScreen() {
       return;
     }
 
-    cxtDispatch({
+    ctxDispatch({
       type: 'CART_ADD_ITEM',
-      payload: { ...product, quantity},
+      payload: { ...product, quantity },
     });
 
     navigate('/cart');
