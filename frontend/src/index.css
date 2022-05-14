@@ -56,6 +56,10 @@ main {
   max-width: 100%;
 }
 
+.img-thumbnail {
+  height: 80px;
+}
+
 .product-info {
   padding: 1rem;
 }
