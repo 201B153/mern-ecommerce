@@ -7,7 +7,7 @@ const data = {
       price: 120,
       countInStock: 10,
       brand: 'Nike',
-      ratings: '4.5',
+      rating: 4.5,
       numReviews: 10,
       description: 'best quality',
     },
@@ -16,9 +16,9 @@ const data = {
       slug: 'flower-2',
       image: '/assets/pic2.png',
       price: 120,
-      countInStock: 10,
+      countInStock: 0,
       brand: 'hike',
-      ratings: '4.5',
+      rating: 4.5,
       numReviews: 10,
       description: 'best quality',
     },
@@ -27,13 +27,14 @@ const data = {
       slug: 'flower-3',
       image: '/assets/pic3.png',
       price: 120,
-      countInStock: 10,
+      countInStock: 0,
       brand: 'like',
-      ratings: '4.5',
+      rating: 2.5,
       numReviews: 10,
       description: 'best quality',
     },
   ],
 };
+
 
 export default data;
