@@ -1,6 +1,7 @@
 const data = {
   products: [
     {
+      _id: '1',
       name: 'flower-1',
       slug: 'flower-1',
       image: '/assets/pic1.png', //679x x 829x
@@ -12,6 +13,7 @@ const data = {
       description: 'best quality',
     },
     {
+      _id: '2',
       name: 'flower-2',
       slug: 'flower-2',
       image: '/assets/pic2.png',
@@ -23,6 +25,7 @@ const data = {
       description: 'best quality',
     },
     {
+      _id: '3',
       name: 'flower-3',
       slug: 'flower-3',
       image: '/assets/pic3.png',
