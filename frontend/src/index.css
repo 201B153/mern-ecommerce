@@ -60,6 +60,10 @@ main {
   height: 80px;
 }
 
+.small-container {
+  max-width: 600px;
+}
+
 .product-info {
   padding: 1rem;
 }
