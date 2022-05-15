@@ -9,4 +9,6 @@
 98 npm start
 94 npm i mongoose
 95 npm i dotenv
-115  npm i bcryptjs
+115 npm i bcryptjs
+129 npm i express-async-handler
+131  npm i jsonwebtoken
