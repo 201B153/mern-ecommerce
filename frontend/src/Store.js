@@ -11,6 +11,9 @@ export function StoreProvider(props) {
       shippingAddress: localStorage.getItem('shippingAddress')
         ? JSON.parse(localStorage.getItem('shippingAddress'))
         : {},
+      paymentMethod: localStorage.getItem('paymentMethod')
+        ? localStorage.getItem('paymentMethod')
+        : '',
       cartItems: localStorage.getItem('cartItems')
         ? JSON.parse(localStorage.getItem('cartItems'))
         : [],
@@ -46,7 +49,8 @@ export function StoreProvider(props) {
           userInfo: null,
           cart: {
             cartItems: [],
-            ahippingAddress: {},
+            shippingAddress: {},
+            paymentMethod: '',
           },
         };
       case 'SAVE_SHIPPING_ADDRESS':
@@ -55,6 +59,14 @@ export function StoreProvider(props) {
           cart: {
             ...state.cart,
             shippingAddress: action.payload,
+          },
+        };
+      case 'SAVE_PAYMENT_METHOD':
+        return {
+          ...state,
+          cart: {
+            ...state.cart,
+            paymentMethod: action.payload,
           },
         };
       default:
