@@ -41,6 +41,8 @@ export function StoreProvider(props) {
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         return { ...state, cart: { ...state.cart, cartItems } };
       }
+      case 'CART_CLEAR':
+        return { ...state, cart: { ...state.cart, cartItems: [] } };
       case 'USER_SIGNIN':
         return { ...state, userInfo: action.payload };
       case 'USER_SIGNOUT':
@@ -69,6 +71,7 @@ export function StoreProvider(props) {
             paymentMethod: action.payload,
           },
         };
+
       default:
         return state;
     }
