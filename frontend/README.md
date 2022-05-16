@@ -11,4 +11,5 @@
 88 npm install react-bootstrap bootstrap
 91 npm i react-router-bootstrap
 111 npm i react-helmet-async
-142  npm i react-toastify
+142 npm i react-toastify
+201 npm i @paypal/react-paypal-js

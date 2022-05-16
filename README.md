@@ -11,3 +11,5 @@ Let's get started :)
 : inside backend we will use express as driving for it back stage server .
 
 -> Adding Mongodb to the Project using altas or via local mongoose server.
+
+-> Adding Paypal client to the frontend folder to make payments easier .
