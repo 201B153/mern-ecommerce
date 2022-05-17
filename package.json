@@ -1,0 +1,21 @@
+{
+  "name": "mern-ecommerce",
+  "version": "1.0.0",
+  "description": "Let's get started :) <br/> -> Create Folder named as frontend . <br/> : inside frontend we will carry out our React-UI .",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/201B153/mern-ecommerce.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/201B153/mern-ecommerce/issues"
+  },
+  "homepage": "https://github.com/201B153/mern-ecommerce#readme"
+}

@@ -13,3 +13,6 @@ Let's get started :)
 -> Adding Mongodb to the Project using altas or via local mongoose server.
 
 -> Adding Paypal client to the frontend folder to make payments easier .
+
+-> Adding Hosting Sysytem's such as Heruko to to put ouur site on Line .
+    : We will be using original npm rum build and serve to complete our site.
