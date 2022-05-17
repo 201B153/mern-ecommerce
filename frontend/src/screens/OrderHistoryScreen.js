@@ -37,7 +37,7 @@ export default function OrderHistoryScreen() {
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (error) {
         dispatch({
-          typr: 'FETCH_FAIL',
+          type: 'FETCH_FAIL',
           payload: getError(error),
         });
       }
