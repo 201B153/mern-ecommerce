@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });
 });
 
-//test -not to be used while using mondodb
+//test -not to be used while using mongodb
 // app.get('/api/products', (req, res) => {
 //   res.send(data.products);
 // });
