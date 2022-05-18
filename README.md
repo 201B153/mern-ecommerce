@@ -16,3 +16,5 @@ Let's get started :)
 
 -> Adding Hosting Sysytem's such as Heruko to to put ouur site on Line .
 : We will be using original npm rum build and serve to complete our site. :: npm run build
+// plz add npm run build after && symbol in build file to execute it on heruko...
+

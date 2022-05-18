@@ -4,7 +4,7 @@
   "description": "Let's get started :) <br/> -> Create Folder named as frontend . <br/> : inside frontend we will carry out our React-UI .",
   "main": "index.js",
   "scripts": {
-    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
+    "build": "cd backend && npm install && cd ../frontend && npm install",
     "start": "node backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,3 +19,5 @@
   },
   "homepage": "https://github.com/201B153/mern-ecommerce#readme"
 }
+
+
