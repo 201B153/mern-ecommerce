@@ -9,13 +9,14 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
+import { toast } from 'react-toastify';
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
       return {
         ...state,
-        payload: true,
+        loading: true,
       };
     case 'FETCH_SUCCESS':
       return {
@@ -28,6 +29,22 @@ const reducer = (state, action) => {
         loading: false,
         error: action.payload,
       };
+    case 'UPDATE_REQUEST':
+      return {
+        ...state,
+        loadingUpdate: true,
+      };
+    case 'UPDATE_SUCCESS':
+      return {
+        ...state,
+        loadingUpdate: false,
+      };
+    case 'UPDATE_FAIL':
+      return {
+        ...state,
+        loadingUpdate: false,
+        
+      };
     default:
       return state;
   }
@@ -37,7 +54,7 @@ export default function ProductEditScreen() {
   const params = useParams(); // /product/:id
   const { id: productId } = params;
   const navigate = useNavigate();
-  const [{ loading, error }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
     loading: true,
     error: '',
   });
@@ -78,20 +95,50 @@ export default function ProductEditScreen() {
     };
     fetchData();
   }, [productId]);
-
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch({ type: 'UPDATE_REQUEST' });
+      await axios.put(
+        `/api/products/${productId}`,
+        {
+          _id: productId,
+          name,
+          slug,
+          price,
+          image,
+          category,
+          brand,
+          countInStock,
+          description,
+        },
+        {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+      dispatch({
+        type: 'UPDATE_SUCCESS',
+      });
+      toast.success('Product Updated Successfully');
+      navigate('/admin/products');
+    } catch (err) {
+      toast.error(getError(err));
+      dispatch({ type: 'UPDATE_FAIL' });
+    }
+  };
   return (
     <Container className="small-container">
       <Helmet>
-        <title> Edit Product {productId}</title>
+        <title> Edit Product ${productId}</title>
       </Helmet>
-      <h1>Edit Product</h1>
+      <h1>Edit Product {productId}</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
-        <Form>
+        <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -100,7 +147,7 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="name">
+          <Form.Group className="mb-3" controlId="slug">
             <Form.Label>Slug</Form.Label>
             <Form.Control
               value={slug}

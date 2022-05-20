@@ -52,7 +52,7 @@ export default function ProductListScreen() {
       error: '',
     });
   const navigate = useNavigate();
-  const { search, pathname } = useLocation();
+  const { search } = useLocation();
   const sp = new URLSearchParams(search);
 
   const page = sp.get('page') || 1;
