@@ -13,3 +13,4 @@
 111 npm i react-helmet-async
 142 npm i react-toastify
 201 npm i @paypal/react-paypal-js
+304 npm i --save react-google-charts
