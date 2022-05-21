@@ -75,7 +75,7 @@ export default function OrderHistoryScreen() {
                 <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
                 <td>
                   {order.isDelivered
-                    ? order.DeliveredAt.substring(0, 10)
+                    ? order.DeliveredAt//.substring(0, 10)
                     : 'No'}
                 </td>
                 <td>
