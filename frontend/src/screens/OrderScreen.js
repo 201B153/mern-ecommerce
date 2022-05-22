@@ -214,8 +214,8 @@ export default function OrderScreen() {
                 {order.shippingAddress.postalCode},
                 {order.shippingAddress.country}
                 &nbsp;
-                {order.shippingAddress.loaction &&
-                  order.shippingAddress.loaction.lat && (
+                {order.shippingAddress.location &&
+                  order.shippingAddress.location.lat && (
                     <a
                       target="_new"
                       href={`https://maps.google.com?q=${order.shippingAddress.location.lat},${order.shippingAddress.location.lng}`}
