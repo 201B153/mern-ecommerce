@@ -14,3 +14,4 @@
 142 npm i react-toastify
 201 npm i @paypal/react-paypal-js
 304 npm i --save react-google-charts
+403 npm i @react-google-maps/api

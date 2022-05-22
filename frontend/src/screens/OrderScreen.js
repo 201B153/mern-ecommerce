@@ -212,7 +212,17 @@ export default function OrderScreen() {
                 <strong>Address:</strong>
                 {order.shippingAddress.address},{order.shippingAddress.city},
                 {order.shippingAddress.postalCode},
-                {order.shippingAddress.country},
+                {order.shippingAddress.country}
+                &nbsp;
+                {order.shippingAddress.loaction &&
+                  order.shippingAddress.loaction.lat && (
+                    <a
+                      target="_new"
+                      href={`https://maps.google.com?q=${order.shippingAddress.location.lat},${order.shippingAddress.location.lng}`}
+                    >
+                      Show On Map
+                    </a>
+                  )}
               </Card.Text>
               {order.isDelivered ? (
                 <MessageBox variant="success">

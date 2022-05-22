@@ -33,10 +33,11 @@ import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreeen from './screens/UserEditScreeen';
+import MapScreen from './screens/MapScreen';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart, userInfo } = state;
+  const { fullBox, cart, userInfo } = state;
   const signoutHandler = () => {
     ctxDispatch({ type: 'USER_SIGNOUT' });
     localStorage.removeItem('userInfo');
@@ -63,7 +64,11 @@ function App() {
       <div
         className={
           sidebarIsopen
-            ? 'd-flex flex-column site-container active-cont'
+            ? fullBox
+              ? ' d-flex flex-column site-container active-cont full-box'
+              : 'd-flex flex-column active-cont site-container'
+            : fullBox
+            ? 'd-flex flex-column site-container full-box'
             : 'd-flex flex-column site-container'
         }
       >
@@ -170,6 +175,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProfileScreen />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/map"
+                element={
+                  <ProtectedRoute>
+                    <MapScreen />
                   </ProtectedRoute>
                 }
               />
