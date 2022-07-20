@@ -1,4 +1,4 @@
-import express, { application } from 'express';
+import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -31,14 +31,10 @@ app.get('/api/keys/google', (req, res) => {
   res.send({ key: process.env.GOOGLE_API_KEY || '' });
 });
 
-app.use('/api/seed', seedRouter);
-
 app.use('/api/upload', uploadRouter);
-
+app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
-
 app.use('/api/users', userRouter);
-
 app.use('/api/orders', orderRouter);
 
 const __dirname = path.resolve();
@@ -46,14 +42,10 @@ app.use(express.static(path.join(__dirname, '/frontend/build')));
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
 );
+
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });
 });
-
-//test -not to be used while using mongodb
-// app.get('/api/products', (req, res) => {
-//   res.send(data.products);
-// });
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

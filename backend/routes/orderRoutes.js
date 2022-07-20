@@ -31,6 +31,7 @@ orderRouter.post(
       totalPrice: req.body.totalPrice,
       user: req.user._id,
     });
+
     const order = await newOrder.save();
     res.status(201).send({ message: 'New Order Created', order });
   })
@@ -88,6 +89,7 @@ orderRouter.get(
     res.send(orders);
   })
 );
+
 orderRouter.get(
   '/:id',
   isAuth,
@@ -108,7 +110,7 @@ orderRouter.put(
     const order = await Order.findById(req.params.id);
     if (order) {
       order.isDelivered = true;
-      order.deliveredAT = Date.now();
+      order.deliveredAt = Date.now();
       await order.save();
       res.send({ message: 'Order Delivered' });
     } else {
@@ -134,14 +136,15 @@ orderRouter.put(
         update_time: req.body.update_time,
         email_address: req.body.email_address,
       };
+
       const updatedOrder = await order.save();
       mailgun()
         .messages()
         .send(
           {
-            from: '2011b53 <201b153@mg.e-commerce.com>',
+            from: '201b153 <2011b53@mst.e-commerce.in>',
             to: `${order.user.name} <${order.user.email}>`,
-            subject: `Neew order ${order._id}`,
+            subject: `New order ${order._id}`,
             html: payOrderEmailTemplate(order),
           },
           (error, body) => {
@@ -152,12 +155,14 @@ orderRouter.put(
             }
           }
         );
+
       res.send({ message: 'Order Paid', order: updatedOrder });
     } else {
       res.status(404).send({ message: 'Order Not Found' });
     }
   })
 );
+
 orderRouter.delete(
   '/:id',
   isAuth,

@@ -1,6 +1,6 @@
 import express from 'express';
-import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
 import streamifier from 'streamifier';
 import { isAdmin, isAuth } from '../utils.js';
 
@@ -19,7 +19,6 @@ uploadRouter.post(
       api_key: process.env.CLOUDINARY_API_KEY,
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
-
     const streamUpload = (req) => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream((error, result) => {
@@ -36,5 +35,4 @@ uploadRouter.post(
     res.send(result);
   }
 );
-
 export default uploadRouter;

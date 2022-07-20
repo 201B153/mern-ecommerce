@@ -32,7 +32,7 @@ const orderSchema = new mongoose.Schema(
       },
     },
     paymentMethod: { type: String, required: true },
-    paymentResults: {
+    paymentResult: {
       id: String,
       status: String,
       update_time: String,
@@ -48,7 +48,9 @@ const orderSchema = new mongoose.Schema(
     isDelivered: { type: Boolean, default: false },
     deliveredAt: { type: Date },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 const Order = mongoose.model('Order', orderSchema);

@@ -1,7 +1,7 @@
-import express, { query } from 'express';
+import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import Product from '../models/productModel.js';
-import { isAdmin, isAuth } from '../utils.js';
+import { isAuth, isAdmin } from '../utils.js';
 
 const productRouter = express.Router();
 
@@ -16,8 +16,8 @@ productRouter.post(
   isAdmin,
   expressAsyncHandler(async (req, res) => {
     const newProduct = new Product({
-      name: 'simple nmae' + Date.now(),
-      slug: 'simple-name-' + Date.now(),
+      name: 'sample name ' + Date.now(),
+      slug: 'sample-name-' + Date.now(),
       image: '/images/p1.jpg',
       price: 0,
       category: 'sample category',
@@ -25,13 +25,10 @@ productRouter.post(
       countInStock: 0,
       rating: 0,
       numReviews: 0,
-      description: 'sample discription',
+      description: 'sample description',
     });
     const product = await newProduct.save();
-    res.send({
-      message: 'Product Created',
-      product,
-    });
+    res.send({ message: 'Product Created', product });
   })
 );
 
@@ -46,16 +43,16 @@ productRouter.put(
       product.name = req.body.name;
       product.slug = req.body.slug;
       product.price = req.body.price;
-      product.category = req.body.category;
       product.image = req.body.image;
       product.images = req.body.images;
+      product.category = req.body.category;
       product.brand = req.body.brand;
       product.countInStock = req.body.countInStock;
       product.description = req.body.description;
       await product.save();
       res.send({ message: 'Product Updated' });
     } else {
-      res.status(404).send({ message: 'Product not Found' });
+      res.status(404).send({ message: 'Product Not Found' });
     }
   })
 );
@@ -111,7 +108,7 @@ productRouter.post(
   })
 );
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 3;
 
 productRouter.get(
   '/admin',
@@ -121,6 +118,7 @@ productRouter.get(
     const { query } = req;
     const page = query.page || 1;
     const pageSize = query.pageSize || PAGE_SIZE;
+
     const products = await Product.find()
       .skip(pageSize * (page - 1))
       .limit(pageSize);
@@ -155,12 +153,7 @@ productRouter.get(
             },
           }
         : {};
-    const categoryFilter =
-      category && category !== 'all'
-        ? {
-            category,
-          }
-        : {};
+    const categoryFilter = category && category !== 'all' ? { category } : {};
     const ratingFilter =
       rating && rating !== 'all'
         ? {
@@ -172,9 +165,10 @@ productRouter.get(
     const priceFilter =
       price && price !== 'all'
         ? {
-            name: {
-              $gte: Number(price.split('_')[0]),
-              $lte: Number(price.split('_')[1]),
+            // 1-50
+            price: {
+              $gte: Number(price.split('-')[0]),
+              $lte: Number(price.split('-')[1]),
             },
           }
         : {};
@@ -190,6 +184,7 @@ productRouter.get(
         : order === 'newest'
         ? { createdAt: -1 }
         : { _id: -1 };
+
     const products = await Product.find({
       ...queryFilter,
       ...categoryFilter,
@@ -199,13 +194,13 @@ productRouter.get(
       .sort(sortOrder)
       .skip(pageSize * (page - 1))
       .limit(pageSize);
+
     const countProducts = await Product.countDocuments({
       ...queryFilter,
       ...categoryFilter,
       ...priceFilter,
       ...ratingFilter,
     });
-
     res.send({
       products,
       countProducts,
@@ -228,7 +223,7 @@ productRouter.get('/slug/:slug', async (req, res) => {
   if (product) {
     res.send(product);
   } else {
-    res.status(404).send({ message: 'Product not Found' });
+    res.status(404).send({ message: 'Product Not Found' });
   }
 });
 productRouter.get('/:id', async (req, res) => {
@@ -236,7 +231,7 @@ productRouter.get('/:id', async (req, res) => {
   if (product) {
     res.send(product);
   } else {
-    res.status(404).send({ message: 'Product not Found' });
+    res.status(404).send({ message: 'Product Not Found' });
   }
 });
 
