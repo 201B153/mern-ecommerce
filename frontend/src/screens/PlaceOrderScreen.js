@@ -1,16 +1,16 @@
+import Axios from 'axios';
 import React, { useContext, useEffect, useReducer } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import CheckoutSteps from '../components/CheckoutSteps';
 import { Helmet } from 'react-helmet-async';
+import { Link, useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { Store } from '../Store';
-import { getError } from '../utils';
 import { toast } from 'react-toastify';
-import Axios from 'axios';
+import { getError } from '../utils';
+import { Store } from '../Store';
+import CheckoutSteps from '../components/CheckoutSteps';
 import LoadingBox from '../components/LoadingBox';
 
 const reducer = (state, action) => {
@@ -25,11 +25,14 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
 export default function PlaceOrderScreen() {
   const navigate = useNavigate();
+
   const [{ loading }, dispatch] = useReducer(reducer, {
     loading: false,
   });
+
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
 
@@ -44,6 +47,7 @@ export default function PlaceOrderScreen() {
   const placeOrderHandler = async () => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
+
       const { data } = await Axios.post(
         '/api/orders',
         {
@@ -76,40 +80,39 @@ export default function PlaceOrderScreen() {
       navigate('/payment');
     }
   }, [cart, navigate]);
+
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>
       <Helmet>
         <title>Preview Order</title>
       </Helmet>
-      <h1 className="my-3"> Preview order</h1>
+      <h1 className="my-3">Preview Order</h1>
       <Row>
         <Col md={8}>
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Shipping</Card.Title>
               <Card.Text>
-                <strong>Name:</strong>
-                {cart.shippingAddress.fullName}
-                <br />
-                <strong>Address:</strong>
-                {cart.shippingAddress.fullName},{cart.shippingAddress.city},
-                {cart.shippingAddress.postalCode},{cart.shippingAddress.country}
-                <br />
+                <strong>Name:</strong> {cart.shippingAddress.fullName} <br />
+                <strong>Address: </strong> {cart.shippingAddress.address},
+                {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},
+                {cart.shippingAddress.country}
               </Card.Text>
               <Link to="/shipping">Edit</Link>
             </Card.Body>
           </Card>
+
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Payment</Card.Title>
               <Card.Text>
-                <strong>Method:</strong>
-                {cart.paymentMethod}
+                <strong>Method:</strong> {cart.paymentMethod}
               </Card.Text>
               <Link to="/payment">Edit</Link>
             </Card.Body>
           </Card>
+
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Items</Card.Title>
@@ -179,8 +182,8 @@ export default function PlaceOrderScreen() {
                     >
                       Place Order
                     </Button>
-                    {loading && <LoadingBox></LoadingBox>}
                   </div>
+                  {loading && <LoadingBox></LoadingBox>}
                 </ListGroup.Item>
               </ListGroup>
             </Card.Body>

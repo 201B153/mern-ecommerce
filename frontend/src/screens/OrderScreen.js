@@ -1,18 +1,19 @@
+import axios from 'axios';
 import React, { useContext, useEffect, useReducer } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { Helmet } from 'react-helmet-async';
+import { useNavigate, useParams } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card';
+import { Link } from 'react-router-dom';
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import { toast } from 'react-toastify';
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import Button from 'react-bootstrap/Button';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -30,23 +31,13 @@ function reducer(state, action) {
       return { ...state, loadingPay: false };
     case 'PAY_RESET':
       return { ...state, loadingPay: false, successPay: false };
+
     case 'DELIVER_REQUEST':
-      return {
-        ...state,
-        loadingDeliver: true,
-      };
+      return { ...state, loadingDeliver: true };
     case 'DELIVER_SUCCESS':
-      return {
-        ...state,
-        loadingDeliver: false,
-        successDeliver: true,
-      };
+      return { ...state, loadingDeliver: false, successDeliver: true };
     case 'DELIVER_FAIL':
-      return {
-        ...state,
-        loadingDeliver: false,
-        errorDeliver: action.payload,
-      };
+      return { ...state, loadingDeliver: false };
     case 'DELIVER_RESET':
       return {
         ...state,
@@ -57,13 +48,14 @@ function reducer(state, action) {
       return state;
   }
 }
-
 export default function OrderScreen() {
   const { state } = useContext(Store);
   const { userInfo } = state;
+
   const params = useParams();
   const { id: orderId } = params;
   const navigate = useNavigate();
+
   const [
     {
       loading,
@@ -82,7 +74,9 @@ export default function OrderScreen() {
     successPay: false,
     loadingPay: false,
   });
+
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
   function createOrder(data, actions) {
     return actions.order
       .create({
@@ -96,6 +90,7 @@ export default function OrderScreen() {
         return orderID;
       });
   }
+
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
@@ -108,7 +103,7 @@ export default function OrderScreen() {
           }
         );
         dispatch({ type: 'PAY_SUCCESS', payload: data });
-        toast.success('Order is Piad');
+        toast.success('Order is paid');
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));
@@ -118,6 +113,7 @@ export default function OrderScreen() {
   function onError(err) {
     toast.error(getError(err));
   }
+
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -130,6 +126,7 @@ export default function OrderScreen() {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
+
     if (!userInfo) {
       return navigate('/login');
     }
@@ -148,8 +145,8 @@ export default function OrderScreen() {
       }
     } else {
       const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get(`/api/keys/paypal`, {
-          header: { authorization: `Bearer ${userInfo.token}` },
+        const { data: clientId } = await axios.get('/api/keys/paypal', {
+          headers: { authorization: `Bearer ${userInfo.token}` },
         });
         paypalDispatch({
           type: 'resetOptions',
@@ -167,9 +164,8 @@ export default function OrderScreen() {
     userInfo,
     orderId,
     navigate,
-    dispatch,
-    successPay,
     paypalDispatch,
+    successPay,
     successDeliver,
   ]);
 
@@ -184,12 +180,13 @@ export default function OrderScreen() {
         }
       );
       dispatch({ type: 'DELIVER_SUCCESS', payload: data });
-      toast.success('order is delivered');
+      toast.success('Order is delivered');
     } catch (err) {
       toast.error(getError(err));
       dispatch({ type: 'DELIVER_FAIL' });
     }
   }
+
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -199,20 +196,17 @@ export default function OrderScreen() {
       <Helmet>
         <title>Order {orderId}</title>
       </Helmet>
-      <h1 className="my-3"> Order {orderId}</h1>
+      <h1 className="my-3">Order {orderId}</h1>
       <Row>
         <Col md={8}>
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Shipping</Card.Title>
               <Card.Text>
-                <strong>Name:</strong>
-                {order.shippingAddress.fullName}
-                <br />
-                <strong>Address:</strong>
-                {order.shippingAddress.address},{order.shippingAddress.city},
-                {order.shippingAddress.postalCode},
-                {order.shippingAddress.country}
+                <strong>Name:</strong> {order.shippingAddress.fullName} <br />
+                <strong>Address: </strong> {order.shippingAddress.address},
+                {order.shippingAddress.city}, {order.shippingAddress.postalCode}
+                ,{order.shippingAddress.country}
                 &nbsp;
                 {order.shippingAddress.location &&
                   order.shippingAddress.location.lat && (
@@ -237,10 +231,8 @@ export default function OrderScreen() {
             <Card.Body>
               <Card.Title>Payment</Card.Title>
               <Card.Text>
-                <strong>Method:</strong>
-                {order.paymentMethod}
+                <strong>Method:</strong> {order.paymentMethod}
               </Card.Text>
-
               {order.isPaid ? (
                 <MessageBox variant="success">
                   Paid at {order.paidAt}
@@ -250,6 +242,7 @@ export default function OrderScreen() {
               )}
             </Card.Body>
           </Card>
+
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Items</Card.Title>
@@ -266,9 +259,9 @@ export default function OrderScreen() {
                         <Link to={`/product/${item.slug}`}>{item.name}</Link>
                       </Col>
                       <Col md={3}>
-                        <span>{item.quality} </span>
+                        <span>{item.quantity}</span>
                       </Col>
-                      <Col md={3}> $ {item.price}</Col>
+                      <Col md={3}>${item.price}</Col>
                     </Row>
                   </ListGroup.Item>
                 ))}
@@ -284,25 +277,29 @@ export default function OrderScreen() {
                 <ListGroup.Item>
                   <Row>
                     <Col>Items</Col>
-                    <Col> $ {order.itemsPrice.toFixed(2)}</Col>
+                    <Col>${order.itemsPrice.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Shipping</Col>
-                    <Col> $ {order.shippingPrice.toFixed(2)}</Col>
+                    <Col>${order.shippingPrice.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Tax</Col>
-                    <Col> $ {order.taxPrice.toFixed(2)}</Col>
+                    <Col>${order.taxPrice.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
-                    <Col>Order Total</Col>
-                    <Col> $ {order.totalPrice.toFixed(2)}</Col>
+                    <Col>
+                      <strong> Order Total</strong>
+                    </Col>
+                    <Col>
+                      <strong>${order.totalPrice.toFixed(2)}</strong>
+                    </Col>
                   </Row>
                 </ListGroup.Item>
                 {!order.isPaid && (

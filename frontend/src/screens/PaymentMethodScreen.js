@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { Store } from '../Store';
 
@@ -12,9 +12,11 @@ export default function PaymentMethodScreen() {
   const {
     cart: { shippingAddress, paymentMethod },
   } = state;
+
   const [paymentMethodName, setPaymentMethod] = useState(
     paymentMethod || 'PayPal'
   );
+
   useEffect(() => {
     if (!shippingAddress.address) {
       navigate('/shipping');
@@ -29,10 +31,10 @@ export default function PaymentMethodScreen() {
   return (
     <div>
       <CheckoutSteps step1 step2 step3></CheckoutSteps>
-      <Helmet>
-        <title> Payment method</title>
-      </Helmet>
-      <div className="container container-small">
+      <div className="container small-container">
+        <Helmet>
+          <title>Payment Method</title>
+        </Helmet>
         <h1 className="my-3">Payment Method</h1>
         <Form onSubmit={submitHandler}>
           <div className="mb-3">

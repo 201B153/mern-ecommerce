@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -20,12 +20,12 @@ export default function ShippingAddressScreen() {
   const [postalCode, setPostalCode] = useState(
     shippingAddress.postalCode || ''
   );
-  const [country, setCountry] = useState(shippingAddress.country || '');
   useEffect(() => {
     if (!userInfo) {
       navigate('/signin?redirect=/shipping');
     }
   }, [userInfo, navigate]);
+  const [country, setCountry] = useState(shippingAddress.country || '');
   const submitHandler = (e) => {
     e.preventDefault();
     ctxDispatch({
@@ -52,19 +52,22 @@ export default function ShippingAddressScreen() {
     );
     navigate('/payment');
   };
+
   useEffect(() => {
     ctxDispatch({ type: 'SET_FULLBOX_OFF' });
   }, [ctxDispatch, fullBox]);
+
   return (
     <div>
       <Helmet>
-        <title>Shipping Addrss</title>
+        <title>Shipping Address</title>
       </Helmet>
+
       <CheckoutSteps step1 step2></CheckoutSteps>
       <div className="container small-container">
-        <h1 className="my-3"> Shipping Address</h1>
+        <h1 className="my-3">Shipping Address</h1>
         <Form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="fullname">
+          <Form.Group className="mb-3" controlId="fullName">
             <Form.Label>Full Name</Form.Label>
             <Form.Control
               value={fullName}
@@ -89,7 +92,7 @@ export default function ShippingAddressScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="postalCode">
-            <Form.Label>PostalCode</Form.Label>
+            <Form.Label>Postal Code</Form.Label>
             <Form.Control
               value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
@@ -111,17 +114,18 @@ export default function ShippingAddressScreen() {
               variant="light"
               onClick={() => navigate('/map')}
             >
-              Choose location On Map
+              Choose Location On Map
             </Button>
             {shippingAddress.location && shippingAddress.location.lat ? (
               <div>
                 LAT: {shippingAddress.location.lat}
-                LNG: {shippingAddress.location.lng}
+                LNG:{shippingAddress.location.lng}
               </div>
             ) : (
-              <div> No Location</div>
+              <div>No location</div>
             )}
           </div>
+
           <div className="mb-3">
             <Button variant="primary" type="submit">
               Continue

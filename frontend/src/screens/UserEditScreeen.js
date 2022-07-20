@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,48 +14,31 @@ import { getError } from '../utils';
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
-      return {
-        ...state,
-        loading: true,
-      };
+      return { ...state, loading: true };
     case 'FETCH_SUCCESS':
-      return {
-        ...state,
-        loading: false,
-      };
+      return { ...state, loading: false };
     case 'FETCH_FAIL':
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
+      return { ...state, loading: false, error: action.payload };
     case 'UPDATE_REQUEST':
-      return {
-        ...state,
-        loadingUpdate: true,
-      };
+      return { ...state, loadingUpdate: true };
     case 'UPDATE_SUCCESS':
-      return {
-        ...state,
-        loadingUpdate: false,
-      };
+      return { ...state, loadingUpdate: false };
     case 'UPDATE_FAIL':
-      return {
-        ...state,
-        loadingUpdate: false,
-      };
+      return { ...state, loadingUpdate: false };
     default:
       return state;
   }
 };
 
-export default function UserEditScreeen() {
+export default function UserEditScreen() {
   const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
-    laoding: true,
+    loading: true,
     error: '',
   });
+
   const { state } = useContext(Store);
   const { userInfo } = state;
+
   const params = useParams();
   const { id: userId } = params;
   const navigate = useNavigate();
@@ -69,7 +52,7 @@ export default function UserEditScreeen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/users/${userId}`, {
-          headers: { authorization: ` Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         setName(data.name);
         setEmail(data.email);
@@ -78,40 +61,38 @@ export default function UserEditScreeen() {
       } catch (err) {
         dispatch({
           type: 'FETCH_FAIL',
-          paylaod: getError(err),
+          payload: getError(err),
         });
       }
     };
+    fetchData();
   }, [userId, userInfo]);
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      dispatch({
-        type: 'UPDATE_REQUEST',
-      });
+      dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
         `/api/users/${userId}`,
+        { _id: userId, name, email, isAdmin },
         {
-          _id: userId,
-          name,
-          email,
-          isAdmin,
-        },
-        { headers: { authorization: `Bearer ${userInfo.token}` } }
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        }
       );
-      dispatch({ type: 'UPDATE_SUCCESS' });
-      toast.success('User Updated Successfully');
+      dispatch({
+        type: 'UPDATE_SUCCESS',
+      });
+      toast.success('User updated successfully');
       navigate('/admin/users');
     } catch (error) {
       toast.error(getError(error));
       dispatch({ type: 'UPDATE_FAIL' });
     }
   };
-
   return (
     <Container className="small-container">
       <Helmet>
-        <title> Edit User ${userId}</title>
+        <title>Edit User ${userId}</title>
       </Helmet>
       <h1>Edit User {userId}</h1>
 
@@ -133,21 +114,26 @@ export default function UserEditScreeen() {
             <Form.Label>Email</Form.Label>
             <Form.Control
               value={email}
+              type="email"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </Form.Group>
+
           <Form.Check
             className="mb-3"
             type="checkbox"
             id="isAdmin"
             label="isAdmin"
             checked={isAdmin}
-            onChange={(e) => setIsAdmin(e.target.checked)}        
+            onChange={(e) => setIsAdmin(e.target.checked)}
           />
 
           <div className="mb-3">
-            <Button type="submit">Update</Button>
+            <Button disabled={loadingUpdate} type="submit">
+              Update
+            </Button>
+            {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>
         </Form>
       )}

@@ -6,13 +6,14 @@ import {
   StandaloneSearchBox,
   Marker,
 } from '@react-google-maps/api';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { Store } from '../Store';
 import Button from 'react-bootstrap/Button';
+import { toast } from 'react-toastify';
 
 const defaultLocation = { lat: 45.516, lng: -73.56 };
 const libs = ['places'];
+
 export default function MapScreen() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
@@ -44,27 +45,28 @@ export default function MapScreen() {
   useEffect(() => {
     const fetch = async () => {
       const { data } = await axios('/api/keys/google', {
-        headers: { authorization: `Bearer ${userInfo.token}` },
+        headers: { Authorization: `BEARER ${userInfo.token}` },
       });
       setGoogleApiKey(data.key);
       getUserCurrentLocation();
     };
+
     fetch();
     ctxDispatch({
-      type: 'SET_FLEXBOX_ON',
+      type: 'SET_FULLBOX_ON',
     });
-  }, [ctxDispatch, userInfo]);
+  }, [ctxDispatch]);
 
   const onLoad = (map) => {
     mapRef.current = map;
   };
-
   const onIdle = () => {
     setLocation({
       lat: mapRef.current.center.lat(),
       lng: mapRef.current.center.lng(),
     });
   };
+
   const onLoadPlaces = (place) => {
     placeRef.current = place;
   };
@@ -73,9 +75,11 @@ export default function MapScreen() {
     setCenter({ lat: place.lat(), lng: place.lng() });
     setLocation({ lat: place.lat(), lng: place.lng() });
   };
+
   const onMarkerLoad = (marker) => {
     markerRef.current = marker;
   };
+
   const onConfirm = () => {
     const places = placeRef.current.getPlaces() || [{}];
     ctxDispatch({
@@ -89,14 +93,14 @@ export default function MapScreen() {
         googleAddressId: places[0].id,
       },
     });
-    toast.success(' location selected Successfully');
+    toast.success('location selected successfully.');
     navigate('/shipping');
   };
   return (
     <div className="full-box">
       <LoadScript libraries={libs} googleMapsApiKey={googleApiKey}>
         <GoogleMap
-          id="sample-map"
+          id="smaple-map"
           mapContainerStyle={{ height: '100%', width: '100%' }}
           center={center}
           zoom={15}

@@ -1,44 +1,32 @@
 import axios from 'axios';
+import { useContext, useEffect, useReducer, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
-import { useContext, useEffect, useReducer, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import Rating from '../components/Rating';
-import Button from 'react-bootstrap/esm/Button';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
 import { Store } from '../Store';
-import { toast } from 'react-toastify';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { toast } from 'react-toastify';
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'REFRESH_PRODUCT':
-      return {
-        ...state,
-        product: action.payload,
-      };
+      return { ...state, product: action.payload };
     case 'CREATE_REQUEST':
-      return {
-        ...state,
-        loadingCreateReview: true,
-      };
+      return { ...state, loadingCreateReview: true };
     case 'CREATE_SUCCESS':
-      return {
-        ...state,
-        loadingCreateReview: false,
-      };
+      return { ...state, loadingCreateReview: false };
     case 'CREATE_FAIL':
-      return {
-        ...state,
-        loadingCreateReview: false,
-      };
+      return { ...state, loadingCreateReview: false };
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -52,6 +40,7 @@ const reducer = (state, action) => {
 
 function ProductScreen() {
   let reviewsRef = useRef();
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
@@ -66,7 +55,6 @@ function ProductScreen() {
       loading: true,
       error: '',
     });
-  // const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
@@ -76,7 +64,6 @@ function ProductScreen() {
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
-      // setProducts(result.data);
     };
     fetchData();
   }, [slug]);
@@ -88,15 +75,13 @@ function ProductScreen() {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('sorry, product is out of stock');
+      window.alert('Sorry. Product is out of stock');
       return;
     }
-
     ctxDispatch({
       type: 'CART_ADD_ITEM',
       payload: { ...product, quantity },
     });
-
     navigate('/cart');
   };
 
@@ -111,10 +96,13 @@ function ProductScreen() {
         `/api/products/${product._id}/reviews`,
         { rating, comment, name: userInfo.name },
         {
-          headers: { authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.token}` },
         }
       );
-      dispatch({ type: 'CREATE_SUCCESS' });
+
+      dispatch({
+        type: 'CREATE_SUCCESS',
+      });
       toast.success('Review submitted successfully');
       product.reviews.unshift(data.review);
       product.numReviews = data.numReviews;
@@ -157,7 +145,7 @@ function ProductScreen() {
                 numReviews={product.numReviews}
               ></Rating>
             </ListGroup.Item>
-            <ListGroup.Item>Price : ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Pirce : ${product.price}</ListGroup.Item>
             <ListGroup.Item>
               <Row xs={1} md={2} className="g-2">
                 {[product.image, ...product.images].map((x) => (
@@ -177,7 +165,8 @@ function ProductScreen() {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              Description : <p>{product.description}</p>
+              Description:
+              <p>{product.description}</p>
             </ListGroup.Item>
           </ListGroup>
         </Col>
@@ -185,6 +174,12 @@ function ProductScreen() {
           <Card>
             <Card.Body>
               <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Price:</Col>
+                    <Col>${product.price}</Col>
+                  </Row>
+                </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Status:</Col>
@@ -202,7 +197,7 @@ function ProductScreen() {
                   <ListGroup.Item>
                     <div className="d-grid">
                       <Button onClick={addToCartHandler} variant="primary">
-                        Add To Cart
+                        Add to Cart
                       </Button>
                     </div>
                   </ListGroup.Item>
@@ -223,7 +218,7 @@ function ProductScreen() {
           {product.reviews.map((review) => (
             <ListGroup.Item key={review._id}>
               <strong>{review.name}</strong>
-              <Rating rating={review.rating} captio=" "></Rating>
+              <Rating rating={review.rating} caption=" "></Rating>
               <p>{review.createdAt.substring(0, 10)}</p>
               <p>{review.comment}</p>
             </ListGroup.Item>
@@ -232,7 +227,7 @@ function ProductScreen() {
         <div className="my-3">
           {userInfo ? (
             <form onSubmit={submitHandler}>
-              <h2>Write a customer Review</h2>
+              <h2>Write a customer review</h2>
               <Form.Group className="mb-3" controlId="rating">
                 <Form.Label>Rating</Form.Label>
                 <Form.Select
@@ -241,11 +236,11 @@ function ProductScreen() {
                   onChange={(e) => setRating(e.target.value)}
                 >
                   <option value="">Select...</option>
-                  <option value="1">1-Poor</option>
-                  <option value="2">-Fair</option>
-                  <option value="3">3-Good</option>
-                  <option value="4">4-Very Good</option>
-                  <option value="5">5-Excellent</option>
+                  <option value="1">1- Poor</option>
+                  <option value="2">2- Fair</option>
+                  <option value="3">3- Good</option>
+                  <option value="4">4- Very good</option>
+                  <option value="5">5- Excelent</option>
                 </Form.Select>
               </Form.Group>
               <FloatingLabel
@@ -260,6 +255,7 @@ function ProductScreen() {
                   onChange={(e) => setComment(e.target.value)}
                 />
               </FloatingLabel>
+
               <div className="mb-3">
                 <Button disabled={loadingCreateReview} type="submit">
                   Submit
@@ -281,5 +277,4 @@ function ProductScreen() {
     </div>
   );
 }
-
 export default ProductScreen;

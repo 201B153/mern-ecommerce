@@ -1,9 +1,9 @@
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
 import Axios from 'axios';
-import Form from 'react-bootstrap/Form';
-import { Helmet } from 'react-helmet-async';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { Helmet } from 'react-helmet-async';
 import { useContext, useEffect, useState } from 'react';
 import { Store } from '../Store';
 import { toast } from 'react-toastify';
@@ -12,10 +12,12 @@ import { getError } from '../utils';
 export default function SigninScreen() {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const redirectUrl = new URLSearchParams(search).get('redirect');
-  const redirect = redirectUrl ? redirectUrl : '/';
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
   const submitHandler = async (e) => {
@@ -63,11 +65,11 @@ export default function SigninScreen() {
           />
         </Form.Group>
         <div className="mb-3">
-          <Button type="sbumit">Sign In</Button>
+          <Button type="submit">Sign In</Button>
         </div>
         <div className="mb-3">
-          New Customer?{' '}
-          <Link to={`/signup?redirect=${redirect}`}>Create Your Account</Link>
+          New customer?{' '}
+          <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
         </div>
       </Form>
     </Container>

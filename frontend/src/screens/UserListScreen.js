@@ -75,7 +75,7 @@ export default function UserListScreen() {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
         await axios.delete(`/api/users/${user._id}`, {
-          headers: { authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         toast.success('user deleted successfully');
         dispatch({ type: 'DELETE_SUCCESS' });
@@ -122,7 +122,6 @@ export default function UserListScreen() {
                     type="button"
                     variant="light"
                     onClick={() => navigate(`/admin/user/${user._id}`)}
-
                   >
                     Edit
                   </Button>

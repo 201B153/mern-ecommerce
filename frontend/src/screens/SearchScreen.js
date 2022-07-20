@@ -1,18 +1,17 @@
-import axios from 'axios';
 import React, { useEffect, useReducer, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import { getError } from '../utils';
-
 import { Helmet } from 'react-helmet-async';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Rating from '../components/Rating';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import Button from 'react-bootstrap/esm/Button';
+import Button from 'react-bootstrap/Button';
 import Product from '../components/Product';
-import { LinkContainer } from 'react-router-bootstrap';
-import { toast } from 'react-toastify';
+import LinkContainer from 'react-router-bootstrap/LinkContainer';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -29,6 +28,7 @@ const reducer = (state, action) => {
       };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }
@@ -50,15 +50,31 @@ const prices = [
 ];
 
 export const ratings = [
-  { name: '4Stars & Up', rating: 4 },
-  { name: '3Stars & Up', rating: 3 },
-  { name: '2Stars & Up', rating: 2 },
-  { name: '1Stars & Up', rating: 1 },
+  {
+    name: '4stars & up',
+    rating: 4,
+  },
+
+  {
+    name: '3stars & up',
+    rating: 3,
+  },
+
+  {
+    name: '2stars & up',
+    rating: 2,
+  },
+
+  {
+    name: '1stars & up',
+    rating: 1,
+  },
 ];
+
 export default function SearchScreen() {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const sp = new URLSearchParams(search);
+  const sp = new URLSearchParams(search); // /search?category=Shirts
   const category = sp.get('category') || 'all';
   const query = sp.get('query') || 'all';
   const price = sp.get('price') || 'all';
@@ -81,7 +97,7 @@ export default function SearchScreen() {
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
         dispatch({
-          typr: 'FETCH_FAIL',
+          type: 'FETCH_FAIL',
           payload: getError(error),
         });
       }
@@ -109,10 +125,8 @@ export default function SearchScreen() {
     const filterRating = filter.rating || rating;
     const filterPrice = filter.price || price;
     const sortOrder = filter.order || order;
-
     return `/search?category=${filterCategory}&query=${filterQuery}&price=${filterPrice}&rating=${filterRating}&order=${sortOrder}&page=${filterPage}`;
   };
-
   return (
     <div>
       <Helmet>
@@ -157,8 +171,8 @@ export default function SearchScreen() {
               {prices.map((p) => (
                 <li key={p.value}>
                   <Link
-                  to={getFilterUrl({ price: p.value })}
-                  className={p.value === price ? 'text-bold' : ''}
+                    to={getFilterUrl({ price: p.value })}
+                    className={p.value === price ? 'text-bold' : ''}
                   >
                     {p.name}
                   </Link>
@@ -172,10 +186,10 @@ export default function SearchScreen() {
               {ratings.map((r) => (
                 <li key={r.name}>
                   <Link
-                  to={getFilterUrl({ rating: r.rating })}
-                  className={`${r.rating}` === `${rating}` ? 'text-bold' : ''}
+                    to={getFilterUrl({ rating: r.rating })}
+                    className={`${r.rating}` === `${rating}` ? 'text-bold' : ''}
                   >
-                    <Rating caption={'&Up'} rating={r.rating}></Rating>
+                    <Rating caption={' & up'} rating={r.rating}></Rating>
                   </Link>
                 </li>
               ))}
@@ -184,7 +198,7 @@ export default function SearchScreen() {
                   to={getFilterUrl({ rating: 'all' })}
                   className={rating === 'all' ? 'text-bold' : ''}
                 >
-                  <Rating caption={' & Up'} rating={0}></Rating>
+                  <Rating caption={' & up'} rating={0}></Rating>
                 </Link>
               </li>
             </ul>
@@ -204,7 +218,7 @@ export default function SearchScreen() {
                     {query !== 'all' && ' : ' + query}
                     {category !== 'all' && ' : ' + category}
                     {price !== 'all' && ' : Price ' + price}
-                    {rating !== 'all' && ' : Rating ' + rating + ' & Up'}
+                    {rating !== 'all' && ' : Rating ' + rating + ' & up'}
                     {query !== 'all' ||
                     category !== 'all' ||
                     rating !== 'all' ||
@@ -213,7 +227,7 @@ export default function SearchScreen() {
                         variant="light"
                         onClick={() => navigate('/search')}
                       >
-                        <i className="fas fs-times-circle"></i>
+                        <i className="fas fa-times-circle"></i>
                       </Button>
                     ) : null}
                   </div>
@@ -227,15 +241,16 @@ export default function SearchScreen() {
                     }}
                   >
                     <option value="newest">Newest Arrivals</option>
-                    <option value="lowest">Price: low to High</option>
-                    <option value="highest">Price: high to low</option>
+                    <option value="lowest">Price: Low to High</option>
+                    <option value="highest">Price: High to Low</option>
                     <option value="toprated">Avg. Customer Reviews</option>
                   </select>
                 </Col>
               </Row>
               {products.length === 0 && (
-                <MessageBox> No Product Found</MessageBox>
+                <MessageBox>No Product Found</MessageBox>
               )}
+
               <Row>
                 {products.map((product) => (
                   <Col sm={6} lg={4} className="mb-3" key={product._id}>
