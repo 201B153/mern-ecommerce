@@ -6,7 +6,7 @@ function Rating(props) {
         <i
           className={
             rating >= 1
-              ? 'fs fa-star'
+              ? 'fas fa-star'
               : rating >= 0.5
               ? 'fas fa-star-half-alt'
               : 'far fa-star'
@@ -57,15 +57,12 @@ function Rating(props) {
           }
         />
       </span>
-      <span>
-        {caption ? (
-          <span> {caption}</span>
-        ) : (
-          <span>{' ' + numReviews + ' reviews'}</span>
-        )}
-      </span>
+      {caption ? (
+        <span>{caption}</span>
+      ) : (
+        <span>{' ' + numReviews + ' reviews'}</span>
+      )}
     </div>
   );
 }
-
 export default Rating;
