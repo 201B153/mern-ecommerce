@@ -55,3 +55,9 @@ Let's get started :)
 // plz add npm run build after && symbol in build file to execute it on heruko...
 
 
+  516  heroku login
+  517  heroku git:remote -a ecommerce-shop-201b153
+  518  git add .
+  519  git commit -am "make it better"
+  520  git push heroku master
+  521  history
